@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Подробная информация о {{pet.name}} | {{ block.super }}
+{% endblock %}
+
+
+{% block content %}
+    <h4><img src="{{ pet.photo.url }}" /></h4>
+    <h2>Имя: {{pet.name}}</h2>
+    <h4>Тип: {{ptype}}</h4>
+    <h4>Пол: {{psex}}</h4>
+    <h4>Дата поступления: {{pet.in_date}}</h4>
+    <h4>Приют: {{pet.shelter_id}}</h4>
+    {% if avail %}
+    <h4>Находится в приюте</h4>
+    {% else %}
+    <h4>Уже взяли домой</h4>
+    <h4>Хозяин: {{pet.owner_id}}</h4>
+    {% endif %}
+{% endblock %}
+

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Подробная информация о {{pet.name}} | {{ block.super }}
+{% endblock %}
+
+
+{% block content %}
+    <div class='pet-info'>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 pet-img"><img class="img-thumbnail img-responsive" height="200" src="{{ pet.photo.url }}" /></div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <div class="name">Имя: {{pet.name}}</div>
+            <div>
+                <div>Тип: {{ptype}}</div>
+                <div>Пол: {{psex}}</div>
+                <div>Дата поступления: {{pet.in_date}}</div>
+                <div> <a href="{% url 'shelter_detail' pet.shelter_id.id %}">
+                    Приют: {{pet.shelter_id}}
+                </a></div>
+                {% if avail %}
+                <div>Находится в приюте</div>
+                {% else %}
+                <div>Уже взяли домой</div>
+                <div>Хозяин: {{pet.owner_id}}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

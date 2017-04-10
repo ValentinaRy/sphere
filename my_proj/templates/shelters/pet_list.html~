@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Список питомцев | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+<form method="get">
+<div>
+        {% csrf_token %}
+        {% for field in filter_form %}
+            <div>
+               {{field.label}} {{field}}
+            </div>
+        {% endfor %}
+        <input type="submit" value="Найти"/>
+</div>
+<div>
+    {% if prev %}
+    <input type="submit" name="page" value="Предыдущая"/>
+    {% else %}
+    Предыдущая
+    {% endif %}
+    <input type="submit" name="page" value="Следующая"/>
+    <table>
+    {% for pet in pets %}
+        <tr><td><a href="../../{{pet.id}}">{{pet.name}}</a></td></tr>
+    {% endfor %}
+    </table>s
+    {% if prev %}
+    <a href="{% url 'pet_list' prev %}">Предыдущая</a>
+    {% else %}
+    Предыдущая
+    {% endif %}
+    <a href="{% url 'pet_list' next %}">Следующая</a>
+</div>
+ </form>
+{% endblock %}

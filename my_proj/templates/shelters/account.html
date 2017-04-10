@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Личный кабинет {%if user.is_authenticated %}{{user.username}}{% endif %} | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="name">{{user.username}}</div>
+    {% for w in work %}
+    <div class="work col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <div><a href="{% url 'shelter_detail' w.shelter.id %}">Работа в приюте {{w.shelter}}</a></div>
+        <div>Дата {{w.date}}</div>
+        <div>Рабочее время {{w.work_time}} часов</div>
+        <div>Награда {{w.reward}} р.</div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="name">Вы не авторизованы! Авторизуйтесь, чтобы перейти в личный кабинет.</div>
+    <div><a href = "{% url 'login' %}">Страница авторизации</a></div>
+    <div><a href = "{% url 'signup' %}">Страница регистрации</a></div>
+{% endif %}
+{% endblock %}

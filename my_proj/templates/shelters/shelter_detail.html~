@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Подробная информация о {{shelter.name}} | {{ block.super }}
+{% endblock %}
+
+
+{% block content %}
+    <h2>{{shelter.name}}</h2>
+    <h4>{{shelter.location}}</h4>
+    <h4>{{shelter.email}}</h4>
+{% endblock %}
