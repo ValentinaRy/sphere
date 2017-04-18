@@ -7,7 +7,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.template.context_processors import csrf
 from django.core.urlresolvers import reverse
 from django.db.models import Avg, Count
-from django.core import serializers
 
 def main_page(request):
     return render(
@@ -15,24 +14,16 @@ def main_page(request):
     )
 
 def ajax_shelters(request):
-    page = int(request.GET['page']);
-    shelters = Shelter.objects.filter(rating__content_type__model='User')[(int(page)-1)*20:int(page)*20].annotate(aver = Avg('rating__rating'), cnt = Count('rating__rating'))
-    names = []
-    rates = []
-    cnts = []
-    ids = []
-    for i in range(0, 20):
-        names.append(shelters[i].name)
-        rates.append(shelters[i].aver)
-        cnts.append(shelters[i].cnt)
-        ids.append(shelters[i].id)
-    return JsonResponse({'names': names, 'rates': rates, 'cnts': cnts, 'ids': ids})
+    if 'page' in request.GET:
+        page = int(request.GET['page'])
+    else:
+        page = 0
+    shelters = Shelter.objects.filter(rating__content_type__model='User').annotate(aver = Avg('rating__rating'), cnt = Count('rating__rating'))[(int(page)-1)*20:int(page)*20]
+    return JsonResponse({'data':list(shelters.values('id','name', 'aver', 'cnt'))})
 
 def shelter_list(request):
-    shelters = Shelter.objects.filter(rating__content_type__model='User')[0:20].annotate(aver = Avg('rating__rating'), cnt = Count('rating__rating'))
     return render(
         request, 'shelters/shelter_list.html',
-        {'shelters': shelters}
     )
 
 def shelter_detail(request, shelter_id):
@@ -40,88 +31,42 @@ def shelter_detail(request, shelter_id):
         shelter = Shelter.objects.get(id=shelter_id) 
     except Shelter.DoesNotExist:
         raise Http404('No such shelter')
-    pet_list = Pet.objects.filter(shelter_id=shelter_id)
+    filter_form = PetFilterForm()
     return render(
         request, 'shelters/shelter_detail.html',
-        {'shelter': shelter, 'pet_list': pet_list}
+        {'shelter': shelter, 'filter_form': filter_form}
     )
 
 def ajax_pets(request):
-    page = int(request.GET['page'])
-    ptype = int(request.GET['ptype'])
-    sex = int(request.GET['sex'])
-    avail = request.GET['avail'] == 'on'
-    pets = []
-    if ptype != -1:
+    pets = Pet.objects.all();
+    if 'ptype' in request.GET:
+        ptype = int(request.GET['ptype'])
+        if ptype != -1:
+            pets = pets.filter(ptype=ptype)
+    if 'sex' in request.GET:
+        sex = int(request.GET['sex'])
         if sex != -1:
-            if avail:
-                pets = Pet.objects.filter(ptype=ptype, sex=sex, owner_id__isnull=True)[(int(page)-1)*20:int(page)*20]
-            else:
-                pets = Pet.objects.filter(ptype=ptype, sex=sex)[(int(page)-1)*20:int(page)*20]
-        else:
-            if avail:
-                pets = Pet.objects.filter(ptype=ptype, owner_id__isnull=True)[(int(page)-1)*20:int(page)*20]
-            else:
-                pets = Pet.objects.filter(ptype=ptype)[(int(page)-1)*20:int(page)*20]
+            pets = pets.filter(sex=sex)
+    if 'avail' in request.GET:
+        avail = request.GET['avail'] == 'on'
+        if avail:
+            pets = pets.filter(owner_id__isnull=True)
+    if 'shel_id' in request.GET:
+        shel_id = int(request.GET['shel_id'])
+        if shel_id != -1:
+            pets = pets.filter(shelter_id__id=shel_id)
+    if 'page' in request.GET:
+        page = int(request.GET['page'])
+        pets = pets[(int(page)-1)*20:int(page)*20]
     else:
-        if sex != -1:
-            if avail:
-                pets = Pet.objects.filter(sex=sex, owner_id__isnull=True)[(int(page)-1)*20:int(page)*20]
-            else:
-                pets = Pet.objects.filter(sex=sex)[(int(page)-1)*20:int(page)*20]
-        else:
-            if avail:
-                pets = Pet.objects.filter(owner_id__isnull=True)[(int(page)-1)*20:int(page)*20]
-            else:
-                pets = Pet.objects.all()[(int(page)-1)*20:int(page)*20]
-    names = []
-    photos = []
-    ids = []
-    for i in range(0, 20):
-        names.append(pets[i].name)
-        photos.append(pets[i].photo.url)
-        ids.append(pets[i].id)
-    return JsonResponse({'names': names, 'photos': photos, 'ids': ids})
+        pets = pets[0:20]
+    return JsonResponse({'data':list(pets.values('id','name','photo'))})
 
 def pet_list(request):
-    page = 1
-    if request.method == 'POST':
-        filter_form = PetFilterForm(request.POST)
-    else:
-        filter_form = PetFilterForm(request.GET)
-    ptype = -1
-    sex = -1
-    avail = False
-    if filter_form.is_valid():
-        ptype = int(filter_form.cleaned_data['ptype'])
-        sex = int(filter_form.cleaned_data['sex'])
-        avail = filter_form.cleaned_data['avail']
-    pets = []
-    if ptype != -1:
-        if sex != -1:
-            if avail:
-                pets = Pet.objects.filter(ptype=ptype, sex=sex, owner_id__isnull=True)[(int(page)-1)*20:int(page)*20]
-            else:
-                pets = Pet.objects.filter(ptype=ptype, sex=sex)[(int(page)-1)*20:int(page)*20]
-        else:
-            if avail:
-                pets = Pet.objects.filter(ptype=ptype, owner_id__isnull=True)[(int(page)-1)*20:int(page)*20]
-            else:
-                pets = Pet.objects.filter(ptype=ptype)[(int(page)-1)*20:int(page)*20]
-    else:
-        if sex != -1:
-            if avail:
-                pets = Pet.objects.filter(sex=sex, owner_id__isnull=True)[(int(page)-1)*20:int(page)*20]
-            else:
-                pets = Pet.objects.filter(sex=sex)[(int(page)-1)*20:int(page)*20]
-        else:
-            if avail:
-                pets = Pet.objects.filter(owner_id__isnull=True)[(int(page)-1)*20:int(page)*20]
-            else:
-                pets = Pet.objects.all()[(int(page)-1)*20:int(page)*20]
+    filter_form = PetFilterForm()
     return render(
         request, 'shelters/pet_list.html',
-        {'pets': pets, 'filter_form': filter_form}
+        {'filter_form': filter_form}
     )
 
 def pet_detail(request, pet_id):

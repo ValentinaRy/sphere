@@ -17,7 +17,7 @@
     {% endfor %}
 {% else %}
     <div class="name">Вы не авторизованы! Авторизуйтесь, чтобы перейти в личный кабинет.</div>
-    <div><a href = "{% url 'login' %}">Страница авторизации</a></div>
-    <div><a href = "{% url 'signup' %}">Страница регистрации</a></div>
+    <div class="work"><a href = "{% url 'login' %}">Страница авторизации</a></div>
+    <div class="work"><a href = "{% url 'signup' %}">Страница регистрации</a></div>
 {% endif %}
 {% endblock %}

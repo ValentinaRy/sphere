@@ -59,6 +59,19 @@ body {
 
 }
 
+#main-div {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#main-div div {
+    flex-grow: 1;
+    align-self: center;
+}
+
 .pet_elem {
     border-radius: 25px;
     border: 2px solid rgb(90,80,205);
@@ -152,7 +165,7 @@ body {
     margin: 15;
     padding: 15;
     text-align: center;
-    padding-top: 30;
+    padding-top: 10;
 }
 
 .work:hover {

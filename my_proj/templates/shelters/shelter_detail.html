@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load staticfiles %}
 {% block title %}
     Подробная информация о {{shelter.name}} | {{ block.super }}
 {% endblock %}
@@ -11,17 +11,36 @@
         <div>Адрес: {{shelter.location}}</div>
         <div>Почта: {{shelter.email}}</div>
     </div>
-    <div>
-        <div id="main-div">
-        {% for pet in pet_list %}
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="pet_elem ">
-                    <a href="../{{pet.id}}">
-                        <img height=200 width=200 src="{{ pet.photo.url }}" class="img-rounded"/>
-                        <p>{{pet.name}}</p>
-                    </a>
-                </div>
+<div class="filter-container">
+        {% csrf_token %}
+        {% for field in filter_form %}
+            <div>
+               {{field.label}} {{field}}
             </div>
         {% endfor %}
+        <button id="find" class="pet-filter btn btn-primary" onclick="">Найти</button>
+</div>
+    <div>
+        <div class="navigation">
+            <button class="prev btn btn-primary" onclick="">Предыдущая</button>
+            <label id='page'>1</label>
+            <button class="next btn btn-primary" onclick="">Следующая</button>
+        </div>
+        <div id="main-div">
+        </div>
+        <div class="navigation">
+            <button class="prev btn btn-primary" onclick="">Предыдущая</button>
+            <button class="next btn btn-primary" onclick="">Следующая</button>
+        </div>
     </div>
+<script> 
+    var ajax_link = "{% url 'ajax_pets' %}";
+    var media_url = "{{ MEDIA_URL }}";
+    var pet_list_link = "{% url 'pet_list' %}";
+    var shel_id = {{shelter.id}};
+</script>
+<script src="{% static 'js/pets_list.js' %}"></script>
+<script>
+    getPage(ajax_link, "?page=1&shel_id="+shel_id);
+</script>
 {% endblock %}

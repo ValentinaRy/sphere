@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% block content %}
-<form method="post">
 <div class="filter-container">
         {% csrf_token %}
         {% for field in filter_form %}
@@ -15,7 +14,6 @@
         {% endfor %}
         <button id="find" class="pet-filter btn btn-primary" onclick="">Найти</button>
 </div>
- </form>
 <div>
     <div class="navigation">
         <button class="prev btn btn-primary" onclick="">Предыдущая</button>
@@ -23,22 +21,20 @@
         <button class="next btn btn-primary" onclick="">Следующая</button>
     </div>
     <div id="main-div">
-    {% for pet in pets %}
-        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <div class="pet_elem ">
-                <a href="../{{pet.id}}">
-                    <img height=200 width=200 src="{{ pet.photo.url }}" class="img-rounded"/>
-                    <p>{{pet.name}}</p>
-                </a>
-            </div>
-        </div>
-    {% endfor %}
     </div>
     <div class="navigation">
         <button class="prev btn btn-primary" onclick="">Предыдущая</button>
         <button class="next btn btn-primary" onclick="">Следующая</button>
     </div>
 </div>
-<input id="ajax_link" hidden=true value="{% url 'ajax_pets' %}"/>
+<script> 
+    var ajax_link = "{% url 'ajax_pets' %}";
+    var pet_list_link = "{% url 'pet_list' %}";
+    var media_url = "{{ MEDIA_URL }}";
+    var shel_id = -1;
+</script>
 <script src="{% static 'js/pets_list.js' %}"></script>
+<script>
+    getPage(ajax_link, "?page=1");
+</script>
 {% endblock %}

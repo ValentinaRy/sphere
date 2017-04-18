@@ -16,11 +16,9 @@
         <button class="prev btn btn-primary" onclick="">Предыдущая</button>
         <button class="next btn btn-primary" onclick="">Следующая</button>
     </div>
-    <input id="ajax_link" hidden=true value="{% url 'ajax_shelters' %}"/>
     <script src="{% static 'js/shel_list.js' %}"></script>
     <script>
-        var alink = document.getElementById('ajax_link').value;
-        var param = "?page="+document.getElementById('page').innerHTML;
-        getPage(alink, param);
+        var ajax_link = "{% url 'ajax_shelters' %}";
+        getPage(ajax_link, "?page=1");
     </script>
 {% endblock %}

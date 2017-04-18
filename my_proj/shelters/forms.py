@@ -21,3 +21,6 @@ class PetFilterForm(forms.Form):
     sexes = ((-1, 'Любой'), (0,'Девочка'), (1,'Мальчик'))
     sex = forms.ChoiceField(choices=sexes, widget=forms.Select, label='Пол')
     avail = forms.BooleanField(required=False, initial='True', label='Находится в приюте')
+
+#class ShelFilterForm(forms.Form):
+    #forms.FloatField()
