@@ -2,11 +2,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, JsonResponse, HttpResponseRedirect
 from shelters.models import Shelter, Pet, Rating, Volunteer_work
-from shelters.forms import ShelterForm, PetForm, PetFilterForm
+from shelters.forms import ShelterForm, PetForm, PetFilterForm, CommentForm
 from django.contrib.auth.forms import UserCreationForm
 from django.template.context_processors import csrf
 from django.core.urlresolvers import reverse
 from django.db.models import Avg, Count
+from datetime import datetime
 
 def main_page(request):
     return render(
@@ -28,14 +29,69 @@ def shelter_list(request):
 
 def shelter_detail(request, shelter_id):
     try:
-        shelter = Shelter.objects.get(id=shelter_id) 
+        shelter = Shelter.objects.filter(id=shelter_id, rating__content_type__model='User').annotate(aver = Avg('rating__rating'), cnt = Count('rating__rating'))[0]
     except Shelter.DoesNotExist:
         raise Http404('No such shelter')
     filter_form = PetFilterForm()
+    comments = Rating.objects.filter(content_type__model='User', shelter=shelter.id)
+    if request.method=='GET':
+        com_form = CommentForm()
+    elif request.method=='POST':
+        com_form = CommentForm(request.POST)
+        if com_form.is_valid():
+            new_rat = Rating(
+                rating=com_form.data['rating'],
+                comment=com_form.data['comment'],
+                author=request.user,
+                shelter=shelter,
+                content_object=request.user,
+            )
+            new_rat.save()
+            com_form = CommentForm()
     return render(
         request, 'shelters/shelter_detail.html',
-        {'shelter': shelter, 'filter_form': filter_form}
+        {'shelter': shelter, 'filter_form': filter_form,
+        'comments': comments, 'com_form': com_form}
     )
+
+def shelter_admin(request, shelter_id):
+    try:
+        shelter = Shelter.objects.filter(id=shelter_id, rating__content_type__model='User').annotate(aver=Avg('rating__rating'),cnt=Count('rating__rating'))[0]
+    except Shelter.DoesNotExist:
+        raise Http404('No such shelter')
+    if request.user in shelter.administrators.all():
+        filter_form = PetFilterForm()
+        if request.method=='GET':
+            shel_form = ShelterForm(instance=shelter)
+            pet_form = PetForm()
+        elif request.method=='POST':
+            shel_form = ShelterForm(request.POST)
+            pet_form = PetForm(request.POST, request.FILES)
+            if 'shelbtn' in request.POST:
+                if shel_form.is_valid():
+                    shelter.name = shel_form.data['name']
+                    shelter.location = shel_form.data['location']
+                    shelter.email = shel_form.data['email']
+                    shelter.save()
+            elif 'addpet' in request.POST:
+                if pet_form.is_valid():
+                    new_pet = Pet(
+                        name=pet_form.data['name'],
+                        ptype=pet_form.data['ptype'],
+                        sex=pet_form.data['sex'],
+                        photo=request.FILES['photo'],#pet_form.data['photo'],
+                        in_date=datetime.strptime(pet_form.data['in_date'], "%d.%m.%Y"),
+                        shelter_id=shelter
+                    )
+                    new_pet.save()
+                    pet_form = PetForm()
+        return render(
+            request, 'shelters/shelter_admin.html',
+            {'shelter': shelter, 'filter_form': filter_form,
+             'pet_form': pet_form, 'shel_form': shel_form}
+        )
+    else:
+        raise Http404('No such page')
 
 def ajax_pets(request):
     pets = Pet.objects.all();
@@ -84,10 +140,11 @@ def pet_detail(request, pet_id):
 
 def account(request):
     work = Volunteer_work.objects.filter(volunteer=request.user.id)
+    admins = Shelter.objects.filter(administrators=request.user.id)
     print(len(work))
     return render(
         request, 'shelters/account.html',
-        {'work': work}
+        {'work': work, 'admins': admins}
     )
 
 def signup(request):

@@ -3,13 +3,9 @@ function changeTable(resp) {
     console.log(resp);
     table.innerHTML = "";
     resp.data.forEach(function(elem, num) {
-        //table.innerHTML += '<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">'
-        //+ '<div class="pet_elem ">' + "<a href='" + pet_list_link + "../" + elem.id + "'>"
-        //+ '<img height=200 width=200 src="'+media_url+elem.photo+'" class="img-rounded"/>'
-        //+ '<p>'+elem.name.substring(0,22)+'</p>' + '</a></div></div>';
         table.innerHTML += '<div>'
-        + '<div class="pet_elem ">' + "<a href='" + pet_list_link + "../" + elem.id + "'>"
-        + '<img height=200 width=200 src="'+media_url+elem.photo+'" class="img-rounded"/>'
+        + '<div>' + "<a href='" + pet_list_link + "../" + elem.id + "'>"
+        + '<img height=200 width=200 src="'+media_url+elem.photo+'"/>'
         + '<p>'+elem.name.substring(0,22)+'</p>' + '</a></div></div>';
     });
 }

@@ -7,40 +7,66 @@
 
 {% block content %}
     <div>
-        <div class="name">{{shelter.name}}</div>
+        <div>{{shelter.name}}</div>
         <div>Адрес: {{shelter.location}}</div>
         <div>Почта: {{shelter.email}}</div>
+        <div>Средний рейтинг: {{ shelter.aver }}</div>
+        <div>Количество оценок: {{ shelter.cnt }}</div>
     </div>
-<div class="filter-container">
+    <div>
         {% csrf_token %}
         {% for field in filter_form %}
             <div>
                {{field.label}} {{field}}
             </div>
         {% endfor %}
-        <button id="find" class="pet-filter btn btn-primary" onclick="">Найти</button>
-</div>
+        <button id="find" onclick="">Найти</button>
+    </div>
     <div>
-        <div class="navigation">
-            <button class="prev btn btn-primary" onclick="">Предыдущая</button>
+        <div>
+            <button class="prev" onclick="">Предыдущая</button>
             <label id='page'>1</label>
-            <button class="next btn btn-primary" onclick="">Следующая</button>
+            <button class="next" onclick="">Следующая</button>
         </div>
-        <div id="main-div">
+        <div class="main-div">
         </div>
-        <div class="navigation">
-            <button class="prev btn btn-primary" onclick="">Предыдущая</button>
-            <button class="next btn btn-primary" onclick="">Следующая</button>
+        <div>
+            <button class="prev" onclick="">Предыдущая</button>
+            <button class="next" onclick="">Следующая</button>
         </div>
     </div>
-<script> 
-    var ajax_link = "{% url 'ajax_pets' %}";
-    var media_url = "{{ MEDIA_URL }}";
-    var pet_list_link = "{% url 'pet_list' %}";
-    var shel_id = {{shelter.id}};
-</script>
-<script src="{% static 'js/pets_list.js' %}"></script>
-<script>
-    getPage(ajax_link, "?page=1&shel_id="+shel_id);
-</script>
+    <div>
+        <div>
+            {% for com in comments %}
+                <div>
+                    <div>Оценка: {{ com.rating }}</div>
+                    <div>Комментарий: {{ com.comment }}</div>
+                    <div>Пользователь: {{ com.content_object }}</div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if user.is_authenticated %}
+            <div>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ com_form.as_p }}
+                    <input type="submit" value="отправить"/>
+                </form>
+            </div>
+        {% else %}
+            <div>
+                Только авторизованные пользователи могут оставлять комментари.
+            </div>
+        {% endif %}
+    </div>
+    <script>
+        var ajax_link = "{% url 'ajax_pets' %}";
+        var media_url = "{{ MEDIA_URL }}";
+        var pet_list_link = "{% url 'pet_list' %}";
+        var shel_id = {{shelter.id}};
+    </script>
+    <script src="{% static 'js/pets_list.js' %}"></script>
+    <script>
+        getPage(ajax_link, "?page=1&shel_id="+shel_id);
+    </script>
 {% endblock %}

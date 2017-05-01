@@ -6,18 +6,29 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-    <div class="name">{{user.username}}</div>
-    {% for w in work %}
-    <div class="work col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        <div><a href="{% url 'shelter_detail' w.shelter.id %}">Работа в приюте {{w.shelter}}</a></div>
-        <div>Дата {{w.date}}</div>
-        <div>Рабочее время {{w.work_time}} часов</div>
-        <div>Награда {{w.reward}} р.</div>
+    <div>{{user.username}}</div>
+    <div>
+        {% for w in work %}
+        <div>
+            <div>Работа в приюте <a href="{% url 'shelter_detail' w.shelter.id %}">{{w.shelter}}</a></div>
+            <div>Дата {{w.date}}</div>
+            <div>Рабочее время {{w.work_time}} часов</div>
+            <div>Награда {{w.reward}} р.</div>
+        </div>
+        {% endfor %}
     </div>
+    <div>
+    {% for adm in admins %}
+        <div>
+            Вы администрируете: <a href="{% url 'shelter_detail' adm.id %}admin/">{{adm.name}}</a>
+        </div>
     {% endfor %}
+    </div>
 {% else %}
-    <div class="name">Вы не авторизованы! Авторизуйтесь, чтобы перейти в личный кабинет.</div>
-    <div class="work"><a href = "{% url 'login' %}">Страница авторизации</a></div>
-    <div class="work"><a href = "{% url 'signup' %}">Страница регистрации</a></div>
+    <div>Вы не авторизованы! Авторизуйтесь, чтобы перейти в личный кабинет.</div>
+    <div>
+        <div><a href = "{% url 'login' %}">Страница авторизации</a></div>
+        <div><a href = "{% url 'signup' %}">Страница регистрации</a></div>
+    </div>
 {% endif %}
 {% endblock %}

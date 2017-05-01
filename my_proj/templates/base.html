@@ -10,16 +10,16 @@
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
     </head>
     <body>
-        <div class="main_flex_container">
-            <div class="title_flex_container">
-                <div class="title">Приютик</div>
+        <div>
+            <div>
+                <div>Приютик</div>
                 {% if user.is_authenticated %}
                     <div>Добро пожаловать, {{ user.username }}. <a href="{% url 'logout' %}">Выйти</a></div>
                 {% else %}
                     <div><a href="{% url 'login' %}">Войти</a> или <a href="{% url 'signup' %}">Зарегистрироваться</a></div>
                 {% endif %}
             </div>
-            <div class="menu_flex_container">
+            <div>
                 <div><a href="{% url 'main_page' %}">Главная</a></div>
                 <div><a href="{% url 'shelter_list'%}">Список приютов</a></div>
                 <div><a href="{% url 'pet_list' %}">Список животных</a></div>

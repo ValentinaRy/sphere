@@ -9,7 +9,8 @@ class Shelter(models.Model):
     name = models.CharField(max_length=200, verbose_name='Название приюта', db_index=True)
     location = models.CharField(max_length=200, verbose_name='Адрес')
     email = models.CharField(max_length=200, verbose_name='E-mail')
-    volunteers = models.ManyToManyField(to=User, through='Volunteer_work')
+    volunteers = models.ManyToManyField(to=User, through='Volunteer_work', related_name='volunteers')
+    administrators = models.ManyToManyField(to=User, related_name='administrators')
     
     def __unicode__(self):
         return unicode(self.name)
@@ -19,7 +20,7 @@ class Shelter(models.Model):
         verbose_name_plural = 'Приюты'
 
 class Volunteer_work(models.Model):
-    volunteer = models.ForeignKey(to=User, verbose_name='Волонтер', db_index=True)
+    volunteer = models.ForeignKey(to=User, verbose_name='Волонтер')
     shelter = models.ForeignKey(to=Shelter, verbose_name='Приют')
     date = models.DateField(verbose_name='Дата')
     work_time = models.PositiveIntegerField(verbose_name='Время работы в часах')
@@ -33,7 +34,7 @@ class Volunteer_work(models.Model):
         verbose_name_plural = 'Волонтерство'
 
 class Rating(models.Model):
-    rating = models.PositiveSmallIntegerField(verbose_name='Оценка')
+    rating = models.PositiveSmallIntegerField(verbose_name='Оценка', db_index=True)
     comment = models.CharField(max_length=300, verbose_name='Комментарий')
     author = models.ForeignKey(to=User)
     shelter = models.ForeignKey(to=Shelter)
@@ -56,7 +57,7 @@ class Pet(models.Model):
     photo = models.ImageField(upload_to='images/')
     in_date = models.DateField(verbose_name='Дата поступления в приют')
     out_date = models.DateField(null=True, blank=True, verbose_name='Дата взятия из приюта')
-    shelter_id = models.ForeignKey(to=Shelter, verbose_name='Приют', db_index=True)
+    shelter_id = models.ForeignKey(to=Shelter, verbose_name='Приют')
     owner_id = models.ForeignKey(to=User, null=True, blank=True, on_delete=models.DO_NOTHING, verbose_name='Хозяин')
     
     def __unicode__(self):

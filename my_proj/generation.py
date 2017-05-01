@@ -27,7 +27,7 @@ cnt_women_names = len(women_names)
 cnt_surnames = len(surnames)
 times.append(time.time())
 bulk_users = []
-for i in range(0,100000):
+for i in range(0,0):
     name = ""
     pas = ""
     if random.randint(0,1) == 1:
@@ -60,7 +60,7 @@ cnt_cities = len(cities)
 cnt_streets = len(streets)
 times.append(time.time())
 bulk_shelters = []
-for i in range(0,2000):
+for i in range(0,0):
     name = ""
     if random.randint(1,5) > 1:
         if random.randint(0,1) == 1:
@@ -111,7 +111,7 @@ cnt_shel = len(shelters)
 cnt_user = len(users)
 times.append(time.time())
 bulk_pets = []
-for i in range(0,200000):
+for i in range(0,0):
     name = pet_names[random.randint(0, cnt_pet_names-1)]
     ptype = random.randint(0,3)
     sex = random.randint(0,1)
@@ -130,7 +130,7 @@ times.append(time.time())
 del pet_names
 times.append(time.time())
 bulk_works = []
-for i in range(0,100000):
+for i in range(0,0):
     volunteer = users[random.randint(0, cnt_user-1)]
     shelter = shelters[random.randint(0, cnt_shel-1)]
     work_date = date(random.randint(2010,2017), random.randint(1,12), random.randint(1,28))
@@ -144,7 +144,7 @@ works = Volunteer_work.objects.all()
 cnt_work = len(works)
 times.append(time.time())
 bulk_ratings = []
-for i in range(0,100000):
+for i in range(0,0):
     rating = random.randint(1,10)
     comment = ""
     lng = random.randint(0,20)
@@ -163,4 +163,9 @@ for i in range(0,100000):
                 content_object=work))
 Rating.objects.bulk_create(bulk_ratings)
 times.append(time.time())
+
+#for shel in shelters:
+#    adm = users[random.randint(0, cnt_user-1)]
+#    shel.administrators.add(adm)
+
 print(times)
