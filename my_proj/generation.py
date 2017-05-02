@@ -27,7 +27,7 @@ cnt_women_names = len(women_names)
 cnt_surnames = len(surnames)
 times.append(time.time())
 bulk_users = []
-for i in range(0,100000):
+for i in range(0,0):
     name = ""
     pas = ""
     if random.randint(0,1) == 1:
@@ -60,7 +60,7 @@ cnt_cities = len(cities)
 cnt_streets = len(streets)
 times.append(time.time())
 bulk_shelters = []
-for i in range(0,2000):
+for i in range(0,0):
     name = ""
     if random.randint(1,5) > 1:
         if random.randint(0,1) == 1:
@@ -111,7 +111,7 @@ cnt_shel = len(shelters)
 cnt_user = len(users)
 times.append(time.time())
 bulk_pets = []
-for i in range(0,200000):
+for i in range(0,0):
     name = pet_names[random.randint(0, cnt_pet_names-1)]
     ptype = random.randint(0,3)
     sex = random.randint(0,1)
@@ -130,7 +130,7 @@ times.append(time.time())
 del pet_names
 times.append(time.time())
 bulk_works = []
-for i in range(0,100000):
+for i in range(0,0):
     volunteer = users[random.randint(0, cnt_user-1)]
     shelter = shelters[random.randint(0, cnt_shel-1)]
     work_date = date(random.randint(2010,2017), random.randint(1,12), random.randint(1,28))
@@ -143,6 +143,12 @@ times.append(time.time())
 works = Volunteer_work.objects.all()
 cnt_work = len(works)
 times.append(time.time())
+
+for shel in shelters:
+    adm = users[random.randint(0, cnt_user-1)]
+    shel.administrators.add(adm)
+times.append(time.time())
+
 bulk_ratings = []
 for i in range(0,100000):
     rating = random.randint(1,10)
@@ -153,19 +159,18 @@ for i in range(0,100000):
     shelter = shelters[random.randint(0, cnt_shel-1)]
     if random.randint(0,1) == 0:
         user = users[random.randint(0, cnt_user-1)]
+        author = users[random.randint(0, cnt_user - 1)]
         #comment = "user to shelter"
-        bulk_ratings.append(Rating(rating=rating, comment=comment, shelter=shelter, 
-                content_object=user))
+        bulk_ratings.append(Rating(rating=rating, comment=comment,
+                author=author, shelter=shelter, content_object=user))
     else:
         work = works[random.randint(0, cnt_work-1)]
+        author = shelter.administrators.all()[0]
         #comment = "shelter to work"
-        bulk_ratings.append(Rating(rating=rating, comment=comment, shelter=shelter, 
-                content_object=work))
+        bulk_ratings.append(Rating(rating=rating, comment=comment,
+                author=author, shelter=shelter, content_object=work))
 Rating.objects.bulk_create(bulk_ratings)
 times.append(time.time())
 
-for shel in shelters:
-    adm = users[random.randint(0, cnt_user-1)]
-    shel.administrators.add(adm)
-times.append(time.time())
+
 print(times)
