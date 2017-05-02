@@ -11,21 +11,23 @@
     </head>
     <body>
         <div>
-            <div>
-                <div>Приютик</div>
-                {% if user.is_authenticated %}
-                    <div>Добро пожаловать, {{ user.username }}. <a href="{% url 'logout' %}">Выйти</a></div>
-                {% else %}
-                    <div><a href="{% url 'login' %}">Войти</a> или <a href="{% url 'signup' %}">Зарегистрироваться</a></div>
-                {% endif %}
+            <div class="flex-container">
+                <div class="site-name">Приютик</div>
+                <div class="main-auth">
+                    {% if user.is_authenticated %}
+                        Добро пожаловать, {{ user.username }}. <a href="{% url 'logout' %}">Выйти</a>
+                    {% else %}
+                        <a href="{% url 'login' %}">Войти</a> или <a href="{% url 'signup' %}">Зарегистрироваться</a>
+                    {% endif %}
+                </div>
             </div>
-            <div>
-                <div><a href="{% url 'main_page' %}">Главная</a></div>
-                <div><a href="{% url 'shelter_list'%}">Список приютов</a></div>
-                <div><a href="{% url 'pet_list' %}">Список животных</a></div>
-                <div><a href="{% url 'account' %}">Личный кабинет</a></div>
+            <div class="flex-container main-menu">
+                <a href="{% url 'main_page' %}"><div>Главная</div></a>
+                <a href="{% url 'shelter_list'%}"><div>Список приютов</div></a>
+                <a href="{% url 'pet_list' %}"><div>Список животных</div></a>
+                <a href="{% url 'account' %}"><div>Личный кабинет</div></a>
             </div>
-            <div>
+            <div class="content">
             {% block content %}
             {% endblock %}
             </div>
