@@ -92,3 +92,12 @@ body {
 .content {
     padding: 10;
 }
+
+.navigation {
+    margin: 5;
+    text-align: center;
+}
+
+.navigation label {
+    margin: 10;
+}
