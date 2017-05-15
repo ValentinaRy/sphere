@@ -62,7 +62,7 @@ body {
 }
 
 .main-menu div {
-    background-color: MEDIUMSLATEBLUE;
+    background-color: #6b7aee;
     text-align: center;
     margin: 1;
     padding: 10;
@@ -82,7 +82,7 @@ body {
 }
 
 .main-menu div:hover {
-    background-color: SLATEBLUE;
+    background-color: #5a60cd;
 }
 
 /**
@@ -100,4 +100,63 @@ body {
 
 .navigation label {
     margin: 10;
+}
+
+/**
+Плитки
+ */
+
+.bord-block {
+    border-radius: 10px;
+    border: 2px solid #5a60cd;
+    background: rgb(172, 172, 238);
+    text-align: center;
+}
+
+.bord-block a{
+    color: WHITE;
+    text-decoration: none;
+}
+
+.pet-elem {
+    margin: 25;
+    padding: 15;
+    padding-top: 30;
+    font-size: 20;
+}
+
+.work-elem {
+    margin: 10;
+    padding: 15;
+    font-size: 15;
+}
+
+.admin-elem {
+    margin: 10;
+    padding: 15;
+    font-size: 15;
+}
+
+.comment-elem {
+    margin: 10;
+    padding: 15;
+    font-size: 15;
+}
+
+/**
+Фильтр животных
+ */
+
+.filter-container{
+    padding: 15;
+    padding-top: 20;
+    font-size: 15;
+}
+
+.filter-container select {
+    background-color: rgb(107, 122, 238);
+    color: WHITE;
+}
+
+.filter-container input {
 }

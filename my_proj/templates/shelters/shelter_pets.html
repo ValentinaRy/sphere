@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    Питомцы {{shelter.name}} | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div>
+        {% if shel_form %}
+            <label id="shel-status"></label>
+            <form id="shel-form">
+                {% csrf_token %}
+                {% for field in shel_form %}
+                    <div>
+                       {{field.label}} {{field}}
+                    </div>
+                {% endfor %}
+                <button id="shelbtn" class="btn btn-default">Сохранить</button>
+            </form>
+        {% else %}
+            <div>{{shelter.name}}</div>
+            <div>Адрес: {{shelter.location}}</div>
+            <div>Почта: {{shelter.email}}</div>
+        {% endif %}
+        <div id="aver-rate">Средний рейтинг: {{ shelter.aver }}</div>
+        <div id="cnt-rate">Количество оценок: {{ shelter.cnt }}</div>
+        <div><a href="{% url 'shelter_detail' shelter.id %}">Оценки этого приюта</a></div>
+    </div>
+    <div>
+        {% if pet_form %}
+            <label id="pet-status"></label>
+            <form id="add-pet-form">
+                {% csrf_token %}
+                {% for field in pet_form %}
+                    <div>
+                       {{field.label}} {{field}}
+                    </div>
+                {% endfor %}
+                <button id="addpet" class="btn btn-default" onclick="">Добавить</button>
+            </form>
+        {% endif %}
+    </div>
+    <form method="GET" id="filter-form">
+        <div class="filter-container flex-container bord-block">
+            {% csrf_token %}
+            {% for field in filter_form %}
+                <div>
+                   {{field.label}} {{field}}
+                </div>
+            {% endfor %}
+            <button id="find" onclick="" class="btn btn-default">Найти</button>
+        </div>
+    </form>
+    <div class="navigation">
+        <button class="prev btn btn-default" onclick="">Предыдущая</button>
+        <label id='page'>1</label>
+        <button class="next btn btn-default" onclick="">Следующая</button>
+    </div>
+    <div id="main-div" class="flex-container">
+    </div>
+    <div class="navigation">
+        <button class="prev btn btn-default" onclick="">Предыдущая</button>
+        <button class="next btn btn-default" onclick="">Следующая</button>
+    </div>
+    <div id="main" data-ajax-pet-list="{% url 'ajax_pets' %}"
+        data-pet-list="{% url 'pet_list' %}"
+        data-media-url="{{ MEDIA_URL }}"
+        data-shel-id="{{shelter.id}}"
+        data-shel-admin="{% url 'ajax_shel_admin' %}"
+        data-shel-pets-url="{% url 'shelter_pets' shelter.id %}"></div>
+    <script src="{% static 'js/pets_list.js' %}"></script>
+    <script src="{% static 'js/shel_admin.js' %}"></script>
+{% endblock %}

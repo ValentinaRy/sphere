@@ -9,7 +9,7 @@
     <div>{{user.username}}</div>
     <div>
         {% for w in work %}
-        <div>
+        <div class="bord-block work-elem">
             <div>Работа в приюте <a href="{% url 'shelter_detail' w.shelter.id %}">{{w.shelter}}</a></div>
             <div>Дата {{w.date}}</div>
             <div>Рабочее время {{w.work_time}} часов</div>
@@ -19,16 +19,16 @@
     </div>
     <div>
     {% for adm in admins %}
-        <div>
-            Вы администрируете: <a href="{% url 'shelter_detail' adm.id %}admin/">{{adm.name}}</a>
+        <div class="bord-block admin-elem">
+            Вы администрируете: <a href="{% url 'shelter_detail' adm.id %}">{{adm.name}}</a>
         </div>
     {% endfor %}
     </div>
 {% else %}
     <div>Вы не авторизованы! Авторизуйтесь, чтобы перейти в личный кабинет.</div>
     <div>
-        <div><a href = "{% url 'login' %}">Страница авторизации</a></div>
-        <div><a href = "{% url 'signup' %}">Страница регистрации</a></div>
+        <a href = "{% url 'login' %}"><div>Страница авторизации</div></a>
+        <a href = "{% url 'signup' %}"><div>Страница регистрации</div></a>
     </div>
 {% endif %}
 {% endblock %}

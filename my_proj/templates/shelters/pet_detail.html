@@ -1,30 +1,66 @@
 {% extends 'base.html' %}
-
+{% load staticfiles %}
 {% block title %}
     Подробная информация о {{pet.name}} | {{ block.super }}
 {% endblock %}
 
 
 {% block content %}
-    <div>
-        <div><img height="200" src="{{ pet.photo.url }}" /></div>
-        <div>
-            <div>Имя: {{pet.name}}</div>
-            <div>
-                <div>Тип: {{ptype}}</div>
-                <div>Пол: {{psex}}</div>
-                <div>Дата поступления: {{pet.in_date}}</div>
+    <div class="flex-container">
+        <div><img class="img-thumbnail" height="400px" width="400px" src="{{ pet.photo.url }}" /></div>
+        <div id="pet-info">
+            {% if pet_form %}
+                <label id="pet-info-lbl"></label>
+                <form id="pet-info-form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in pet_form %}
+                        <div>
+                           {{field.label}} {{field}}
+                        </div>
+                    {% endfor %}
+                    <button id="pet-info-btn" onclick="" class="btn btn-default">Сохранить</button>
+                    <button id="del-pet" onclick="" class="btn btn-default">Удалить</button>
+                </form>
                 <div> Приют: <a href="{% url 'shelter_detail' pet.shelter_id.id %}">
                     {{pet.shelter_id}}
                 </a></div>
                 {% if avail %}
-                <div>Находится в приюте</div>
+                    <form id="pet-owner">
+                        {% csrf_token %}
+                        <div>
+                            <input type="number" name="owner_id" id="owner-id" min="1">
+                            <label id="owner-name"></label>
+                        </div>
+                        <button id="set-owner" class="btn btn-default disabled">Установить владельца</button>
+                    </form>
                 {% else %}
-                <div>Уже взяли домой</div>
-                <div>Хозяин: {{pet.owner_id}}</div>
+                    <div>Уже взяли домой</div>
+                    <div>Хозяин: {{pet.owner_id}}</div>
                 {% endif %}
-            </div>
+            {% else %}
+                <div><h3>Имя: {{pet.name}}</h3></div>
+                <div>
+                    <div>Тип: {{ptype}}</div>
+                    <div>Пол: {{psex}}</div>
+                    <div>Дата поступления: {{pet.in_date}}</div>
+                </div>
+                <div> Приют: <a href="{% url 'shelter_detail' pet.shelter_id.id %}">
+                    {{pet.shelter_id}}
+                </a></div>
+                {% if avail %}
+                    <div>Находится в приюте</div>
+                {% else %}
+                    <div>Уже взяли домой</div>
+                    <div>Хозяин: {{pet.owner_id}}</div>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
+    <div id="main" data-media-url="{{ MEDIA_URL }}"
+        data-shel-id="{{ pet.shelter_id.id }}"
+        data-shel-admin="{% url 'ajax_shel_admin' %}"
+        data-pet-id="{{ pet.id }}"
+        data-shel-pets-url="{% url 'shelter_pets' pet.shelter_id.id %}"></div>
+    <script src="{% static 'js/shel_admin.js' %}"></script>
 {% endblock %}
 

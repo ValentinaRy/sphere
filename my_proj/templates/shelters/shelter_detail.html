@@ -7,38 +7,30 @@
 
 {% block content %}
     <div>
-        <div>{{shelter.name}}</div>
-        <div>Адрес: {{shelter.location}}</div>
-        <div>Почта: {{shelter.email}}</div>
-        <div>Средний рейтинг: {{ shelter.aver }}</div>
-        <div>Количество оценок: {{ shelter.cnt }}</div>
+        <label id="shel-status"></label>
+        {% if shel_form %}
+            <form id="shel-form">
+                {% csrf_token %}
+                {% for field in shel_form %}
+                    <div>
+                       {{field.label}} {{field}}
+                    </div>
+                {% endfor %}
+                <button id="shelbtn" class="btn btn-default">Сохранить</button>
+            </form>
+        {% else %}
+            <div>{{shelter.name}}</div>
+            <div>Адрес: {{shelter.location}}</div>
+            <div>Почта: {{shelter.email}}</div>
+        {% endif %}
+        <div id="aver-rate">Средний рейтинг: {{ shelter.aver }}</div>
+        <div id="cnt-rate">Количество оценок: {{ shelter.cnt }}</div>
+        <div><a href="{% url 'shelter_detail' shelter.id %}pets">Животные этого приюта</a></div>
     </div>
     <div>
-        {% csrf_token %}
-        {% for field in filter_form %}
-            <div>
-               {{field.label}} {{field}}
-            </div>
-        {% endfor %}
-        <button id="find" onclick="">Найти</button>
-    </div>
-    <div>
-        <div>
-            <button class="prev" onclick="">Предыдущая</button>
-            <label id='page'>1</label>
-            <button class="next" onclick="">Следующая</button>
-        </div>
-        <div class="main-div">
-        </div>
-        <div>
-            <button class="prev" onclick="">Предыдущая</button>
-            <button class="next" onclick="">Следующая</button>
-        </div>
-    </div>
-    <div>
-        <div>
+        <div id="comments-div" class="flex-container">
             {% for com in comments %}
-                <div>
+                <div class="bord-block comment-elem">
                     <div>Оценка: {{ com.rating }}</div>
                     <div>Комментарий: {{ com.comment }}</div>
                     <div>Пользователь: {{ com.content_object }}</div>
@@ -46,27 +38,25 @@
             {% endfor %}
         </div>
         {% if user.is_authenticated %}
-            <div>
-                <form method="post">
+            <form id="comment-form">
+                <div class="bord-block">
                     {% csrf_token %}
-                    {{ com_form.as_p }}
-                    <input type="submit" value="отправить"/>
-                </form>
-            </div>
+                        {% for field in com_form %}
+                            <div>{{field.label}}{{field}}</div>
+                        {% endfor %}
+                    <button id="comment" class="btn btn-default" onclick="">Отправить</button>
+                </div>
+            </form>
         {% else %}
             <div>
                 Только авторизованные пользователи могут оставлять комментари.
             </div>
         {% endif %}
     </div>
-    <script>
-        var ajax_link = "{% url 'ajax_pets' %}";
-        var media_url = "{{ MEDIA_URL }}";
-        var pet_list_link = "{% url 'pet_list' %}";
-        var shel_id = {{shelter.id}};
-    </script>
-    <script src="{% static 'js/pets_list.js' %}"></script>
-    <script>
-        getPage(ajax_link, "?page=1&shel_id="+shel_id);
-    </script>
+    <div id="main"
+        data-shel-id="{{shelter.id}}"
+        data-shel-admin="{% url 'ajax_shel_admin' %}"
+        data-ajax-comment="{% url 'ajax_comment' %}"></div>
+    <script src="{% static 'js/shel_admin.js' %}"></script>
+    <script src="{% static 'js/comment.js' %}"></script>
 {% endblock %}

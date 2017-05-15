@@ -5,36 +5,31 @@
 {% endblock %}
 
 {% block content %}
-<div>
-        {% csrf_token %}
-        {% for field in filter_form %}
-            <div>
-               {{field.label}} {{field}}
-            </div>
-        {% endfor %}
-        <button id="find" onclick="">Найти</button>
-</div>
-<div>
+    <form method="GET" id="filter-form">
+        <div class="filter-container flex-container bord-block">
+            {% csrf_token %}
+            {% for field in filter_form %}
+                <div>
+                   {{field.label}} {{field}}
+                </div>
+            {% endfor %}
+            <button id="find" onclick="" class="btn btn-default">Найти</button>
+        </div>
+    </form>
     <div class="navigation">
         <button class="prev btn btn-default" onclick="">Предыдущая</button>
         <label id='page'>1</label>
         <button class="next btn btn-default" onclick="">Следующая</button>
     </div>
-    <div id="main-div">
+    <div id="main-div" class="flex-container">
     </div>
     <div class="navigation">
         <button class="prev btn btn-default" onclick="">Предыдущая</button>
         <button class="next btn btn-default" onclick="">Следующая</button>
     </div>
-</div>
-<script> 
-    var ajax_link = "{% url 'ajax_pets' %}";
-    var pet_list_link = "{% url 'pet_list' %}";
-    var media_url = "{{ MEDIA_URL }}";
-    var shel_id = -1;
-</script>
-<script src="{% static 'js/pets_list.js' %}"></script>
-<script>
-    getPage(ajax_link, "?page=1");
-</script>
+    <div id="main" data-ajax-pet-list="{% url 'ajax_pets' %}"
+        data-pet-list="{% url 'pet_list' %}"
+        data-media-url="{{ MEDIA_URL }}"
+        data-shel-id="-1"></div>
+    <script src="{% static 'js/pets_list.js' %}"></script>
 {% endblock %}

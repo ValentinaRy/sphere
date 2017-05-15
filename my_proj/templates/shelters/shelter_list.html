@@ -10,20 +10,17 @@
         <label id='page'>1</label>
         <button class="next btn btn-default" onclick=""\>Следующая</button>
     </div>
-    <table class="table table-striped table-bordered table-hover table-condensed">
+    <table id="shel_list" class="table table-striped table-bordered table-hover table-condensed">
         <thead>
             <tr><th>Название приюта</th><th>Оценка</th><th>Количество</th></tr>
         </thead>
-        <tbody id="shel_list">
+        <tbody>
         </tbody>
     </table>
     <div class="navigation">
         <button class="prev btn btn-default" onclick="">Предыдущая</button>
         <button class="next btn btn-default" onclick="">Следующая</button>
     </div>
+    <div id="main" data-ajax-shel-list="{% url 'ajax_shelters' %}"></div>
     <script src="{% static 'js/shel_list.js' %}"></script>
-    <script>
-        var ajax_link = "{% url 'ajax_shelters' %}";
-        getPage(ajax_link, "?page=1");
-    </script>
 {% endblock %}
