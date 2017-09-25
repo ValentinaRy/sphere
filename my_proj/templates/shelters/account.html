@@ -6,7 +6,7 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-    <div>{{user.username}}</div>
+    <div><h4>{{user.username}}</h4></div>
     <div>
         {% for w in work %}
         <div class="bord-block work-elem">
@@ -25,10 +25,12 @@
     {% endfor %}
     </div>
 {% else %}
-    <div>Вы не авторизованы! Авторизуйтесь, чтобы перейти в личный кабинет.</div>
-    <div>
-        <a href = "{% url 'login' %}"><div>Страница авторизации</div></a>
-        <a href = "{% url 'signup' %}"><div>Страница регистрации</div></a>
+    <div class="bord-block form-elem">
+        <div>Вы не авторизованы! Авторизуйтесь, чтобы перейти в личный кабинет.</div>
+        <div>
+            <a href = "{% url 'login' %}"><div>Страница авторизации</div></a>
+            <a href = "{% url 'signup' %}"><div>Страница регистрации</div></a>
+        </div>
     </div>
 {% endif %}
 {% endblock %}

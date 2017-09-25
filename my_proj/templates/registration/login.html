@@ -5,10 +5,12 @@
 {% endblock %}
 
 {% block content %}
-  <h2>Авторизация на сайте</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Войти</button>
-  </form>
+    <div class="bord-block form-elem">
+        <h4>Авторизация на сайте</h4>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Войти</button>
+        </form>
+    </div>
 {% endblock %}

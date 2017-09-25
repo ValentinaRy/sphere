@@ -5,10 +5,12 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Регистрация</h2>
-    <form action="{% url 'signup' %}" method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-    <input type="submit" value="Зарегистрироваться" />
-    </form>
+    <div class="bord-block form-elem">
+        <h4>Регистрация</h4>
+        <form action="{% url 'signup' %}" method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+        <input type="submit" value="Зарегистрироваться" />
+        </form>
+    </div>
 {% endblock %}

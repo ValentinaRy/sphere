@@ -8,8 +8,9 @@
 {% block content %}
     <div class="flex-container">
         <div><img class="img-thumbnail" height="400px" width="400px" src="{{ pet.photo.url }}" /></div>
-        <div id="pet-info">
+        <div id="pet-info" class="bord-block form-elem">
             {% if pet_form %}
+                <div><h4>Изменить информацию о питомце</h4></div>
                 <label id="pet-info-lbl"></label>
                 <form id="pet-info-form" enctype="multipart/form-data">
                     {% csrf_token %}

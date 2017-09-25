@@ -143,6 +143,13 @@ body {
     font-size: 15;
 }
 
+.form-elem {
+    margin: 10;
+    padding: 15;
+    font-size: 15;
+    text-align: left;
+}
+
 /**
 Фильтр животных
  */

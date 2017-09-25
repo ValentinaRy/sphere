@@ -100,7 +100,13 @@ def ajax_shel_admin(request):
                                      'errors': shelform.errors})
         elif 'add_pet' in request.POST:
             petform = PetForm(request.POST, request.FILES)
+            if not ('pet_photo' in request.FILES):
+                return JsonResponse({'status': 0, 'message': 'No pet photo'})
             if petform.is_valid():
+                if petform.cleaned_data['pet_ptype'] == '-1':
+                    return JsonResponse({'status': 0, 'message': 'Type can\'t be Any'})
+                if petform.cleaned_data['pet_sex'] == '-1':
+                    return JsonResponse({'status': 0, 'message': 'Sex can\'t be Any'})
                 f = request.FILES['pet_photo']
                 randstr = ""
                 for i in range (1,20):
@@ -120,7 +126,7 @@ def ajax_shel_admin(request):
                 new_pet.save()
                 return JsonResponse({'status':1})
             else:
-                return JsonResponse({'status': 0, 'message': 'There are errors',
+                return JsonResponse({'status': 0, 'message': 'There are errors in form',
                                      'errors': petform.errors})
         elif 'ch_pet' in request.POST:
             petform = PetForm(request.POST, request.FILES)
@@ -133,6 +139,10 @@ def ajax_shel_admin(request):
                 except Pet.DoesNotExist:
                     return JsonResponse({'status': 0, 'message': 'No such pet'})
             if petform.is_valid():
+                if petform.cleaned_data['pet_ptype'] == '-1':
+                    return JsonResponse({'status': 0, 'message': 'Type can\'t be Any'})
+                if petform.cleaned_data['pet_sex'] == '-1':
+                    return JsonResponse({'status': 0, 'message': 'Sex can\'t be Any'})
                 pet.name=petform.cleaned_data['pet_name']
                 pet.ptype=int(petform.cleaned_data['pet_ptype'])
                 pet.sex=int(petform.cleaned_data['pet_sex'])
@@ -142,7 +152,7 @@ def ajax_shel_admin(request):
                 pet.save()
                 return JsonResponse({'status': 1, 'photo_url': pet.photo.url})
             else:
-                return JsonResponse({'status': 0, 'message': 'There are errors',
+                return JsonResponse({'status': 0, 'message': 'There are errors in form',
                                      'errors': petform.errors})
         elif 'del_pet' in request.POST:
             if not ('pet_id' in request.POST):

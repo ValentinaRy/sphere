@@ -5,8 +5,9 @@
 {% endblock %}
 
 {% block content %}
-    <div>
+    <div class="bord-block form-elem">
         {% if shel_form %}
+            <div><h4>Изменить информацию о приюте</h4></div>
             <label id="shel-status"></label>
             <form id="shel-form">
                 {% csrf_token %}
@@ -26,9 +27,10 @@
         <div id="cnt-rate">Количество оценок: {{ shelter.cnt }}</div>
         <div><a href="{% url 'shelter_detail' shelter.id %}">Оценки этого приюта</a></div>
     </div>
-    <div>
-        {% if pet_form %}
+    {% if pet_form %}
+        <div class="bord-block form-elem">
             <label id="pet-status"></label>
+            <div><h4>Добавить нового питомца</h4></div>
             <form id="add-pet-form">
                 {% csrf_token %}
                 {% for field in pet_form %}
@@ -38,8 +40,8 @@
                 {% endfor %}
                 <button id="addpet" class="btn btn-default" onclick="">Добавить</button>
             </form>
-        {% endif %}
-    </div>
+        </div>
+    {% endif %}
     <form method="GET" id="filter-form">
         <div class="filter-container flex-container bord-block">
             {% csrf_token %}
